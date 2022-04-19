@@ -100,6 +100,11 @@ class Service {
     return false;
   }
 
+  std::vector<std::unique_ptr<internal::RpcServiceMethod>> *
+  methods() {
+    return &methods_;
+  }
+
  protected:
   template <class Message>
   void RequestAsyncUnary(int index, grpc::ServerContext* context,

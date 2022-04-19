@@ -17,6 +17,7 @@
 [submodule "third_party/boringssl-with-bazel"]
 	path = third_party/boringssl-with-bazel
 	url = https://github.com/google/boringssl.git
+	branch = master-with-bazel
 [submodule "third_party/re2"]
 	path = third_party/re2
 	url = https://github.com/google/re2.git
@@ -30,7 +31,6 @@
 [submodule "third_party/abseil-cpp"]
 	path = third_party/abseil-cpp
 	url = https://github.com/abseil/abseil-cpp.git
-	branch = lts_2020_02_25
 [submodule "third_party/envoy-api"]
 	path = third_party/envoy-api
 	url = https://github.com/envoyproxy/data-plane-api.git
@@ -52,3 +52,6 @@
 [submodule "third_party/xds"]
 	path = third_party/xds
 	url = https://github.com/cncf/xds.git
+[submodule "third_party/nacos-sdk-cpp"]
+	path = third_party/nacos-sdk-cpp
+	url = https://github.com/nacos-group/nacos-sdk-cpp.git

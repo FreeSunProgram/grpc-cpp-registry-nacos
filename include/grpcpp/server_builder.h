@@ -81,6 +81,16 @@ class ExternalConnectionAcceptor {
 
 namespace grpc {
 
+using CreateServer = Server* (*)(
+        grpc::ChannelArguments*,
+        std::shared_ptr<std::vector<std::unique_ptr<grpc::ServerCompletionQueue>>>,
+        int, int, int,
+        std::vector<std::shared_ptr<grpc::internal::ExternalConnectionAcceptorImpl>>,
+        grpc_server_config_fetcher*,
+        grpc_resource_quota*,
+        std::vector<
+                std::unique_ptr<grpc::experimental::ServerInterceptorFactoryInterface>>);
+
 /// A builder class for the creation and startup of \a grpc::Server instances.
 class ServerBuilder {
  public:
@@ -350,6 +360,11 @@ class ServerBuilder {
   /// Experimental API, subject to change.
   virtual ChannelArguments BuildChannelArgs();
 
+  /// 设置Server工厂函数 add by sx
+  void InternalAddServerFactory(CreateServer create_server) {
+      create_server_ = create_server;
+  }
+
  private:
   friend class grpc::testing::ServerBuilderPluginTest;
 
@@ -407,6 +422,7 @@ class ServerBuilder {
   grpc_server_config_fetcher* server_config_fetcher_ = nullptr;
   std::shared_ptr<experimental::AuthorizationPolicyProviderInterface>
       authorization_provider_;
+  CreateServer create_server_ = nullptr;       // add by sx
 };
 
 }  // namespace grpc

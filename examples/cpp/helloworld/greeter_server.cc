@@ -30,8 +30,12 @@
 #include "helloworld.grpc.pb.h"
 #endif
 
+#include <grpcpp/srn_server_builder.h>
+
 using grpc::Server;
 using grpc::ServerBuilder;
+using grpc::SrnServerBuilder;
+//using grpc::SrnServerBuildr;
 using grpc::ServerContext;
 using grpc::Status;
 using helloworld::Greeter;
@@ -49,12 +53,13 @@ class GreeterServiceImpl final : public Greeter::Service {
 };
 
 void RunServer() {
-  std::string server_address("0.0.0.0:50051");
+  int server_address = 50051;
   GreeterServiceImpl service;
 
   grpc::EnableDefaultHealthCheckService(true);
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
-  ServerBuilder builder;
+  SrnServerBuilder builder("localhost:8849");
+
   // Listen on the given address without any authentication mechanism.
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   // Register "service" as the instance through which we'll communicate with

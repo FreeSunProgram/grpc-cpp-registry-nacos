@@ -59,6 +59,28 @@ ServerBuilder::ServerBuilder()
          sizeof(maybe_default_compression_level_));
   memset(&maybe_default_compression_algorithm_, 0,
          sizeof(maybe_default_compression_algorithm_));
+
+  // 注册默认server工厂函数 add by sx
+  if (!create_server_) {
+      create_server_ = [] (
+              grpc::ChannelArguments* args,
+              std::shared_ptr<std::vector<std::unique_ptr<grpc::ServerCompletionQueue>>>
+              sync_server_cqs,
+              int min_pollers, int max_pollers, int sync_cq_timeout_msec,
+              std::vector<std::shared_ptr<grpc::internal::ExternalConnectionAcceptorImpl>>
+              acceptors,
+              grpc_server_config_fetcher* server_config_fetcher,
+              grpc_resource_quota* server_rq,
+              std::vector<
+                      std::unique_ptr<grpc::experimental::ServerInterceptorFactoryInterface>>
+              interceptor_creators) {
+          return new grpc::Server(
+                  args, sync_server_cqs, min_pollers,
+                  max_pollers, sync_cq_timeout_msec,
+                  std::move(acceptors), server_config_fetcher, server_rq,
+                  std::move(interceptor_creators));
+      };
+  }
 }
 
 ServerBuilder::~ServerBuilder() {
@@ -336,7 +358,7 @@ std::unique_ptr<grpc::Server> ServerBuilder::BuildAndStart() {
     gpr_log(GPR_INFO, "Callback server.");
   }
 
-  std::unique_ptr<grpc::Server> server(new grpc::Server(
+  std::unique_ptr<grpc::Server> server(create_server_(
       &args, sync_server_cqs, sync_server_settings_.min_pollers,
       sync_server_settings_.max_pollers, sync_server_settings_.cq_timeout_msec,
       std::move(acceptors_), server_config_fetcher_, resource_quota_,

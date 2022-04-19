@@ -24,5 +24,6 @@
 #define GRPCXX_SERVER_BUILDER_H
 
 #include <grpcpp/server_builder.h>
+#include <grpcpp/srn_server_builder.h>
 
 #endif  // GRPCXX_SERVER_BUILDER_H

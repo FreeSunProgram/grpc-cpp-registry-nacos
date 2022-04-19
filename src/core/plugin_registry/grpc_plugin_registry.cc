@@ -41,6 +41,8 @@ void grpc_lb_policy_round_robin_init(void);
 void grpc_lb_policy_round_robin_shutdown(void);
 void grpc_resolver_dns_ares_init(void);
 void grpc_resolver_dns_ares_shutdown(void);
+void grpc_resolver_nacos_init(void);
+void grpc_resolver_nacos_shutdown(void);
 namespace grpc_core {
 void GrpcLbPolicyRingHashInit(void);
 void GrpcLbPolicyRingHashShutdown(void);
@@ -70,6 +72,8 @@ void grpc_register_built_in_plugins(void) {
                        grpc_core::GrpcLbPolicyRingHashShutdown);
   grpc_register_plugin(grpc_resolver_dns_ares_init,
                        grpc_resolver_dns_ares_shutdown);
+  grpc_register_plugin(grpc_resolver_nacos_init,
+                       grpc_resolver_nacos_shutdown);
   grpc_register_extra_plugins();
 }
 
@@ -96,6 +100,7 @@ extern void RegisterNativeDnsResolver(CoreConfiguration::Builder* builder);
 extern void RegisterAresDnsResolver(CoreConfiguration::Builder* builder);
 extern void RegisterSockaddrResolver(CoreConfiguration::Builder* builder);
 extern void RegisterFakeResolver(CoreConfiguration::Builder* builder);
+extern void RegisterNacosResolver(CoreConfiguration::Builder* builder);;
 #ifdef GPR_SUPPORT_BINDER_TRANSPORT
 extern void RegisterBinderResolver(CoreConfiguration::Builder* builder);
 #endif
@@ -116,6 +121,7 @@ void BuildCoreConfiguration(CoreConfiguration::Builder* builder) {
   RegisterNativeDnsResolver(builder);
   RegisterSockaddrResolver(builder);
   RegisterFakeResolver(builder);
+  RegisterNacosResolver(builder);
 #ifdef GPR_SUPPORT_BINDER_TRANSPORT
   RegisterBinderResolver(builder);
 #endif

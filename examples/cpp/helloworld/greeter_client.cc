@@ -26,6 +26,7 @@
 #include "examples/protos/helloworld.grpc.pb.h"
 #else
 #include "helloworld.grpc.pb.h"
+#include "nacos/Nacos.h"
 #endif
 
 using grpc::Channel;
@@ -96,8 +97,12 @@ int main(int argc, char** argv) {
       return 0;
     }
   } else {
-    target_str = "localhost:50051";
+//    target_str = "dns:///localhost:50051";
+    target_str = "nacos://localhost:8849/helloworld.Greeter";
   }
+
+  std::cout << "start!" << std::endl;
+
   GreeterClient greeter(
       grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
   std::string user("world");
