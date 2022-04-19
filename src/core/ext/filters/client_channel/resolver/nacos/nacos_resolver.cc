@@ -84,14 +84,16 @@ void NacosResolver::StartLocked() {
         result.args = grpc_channel_args_copy_and_add(channel_args_, new_args,
                                                      GPR_ARRAY_SIZE(new_args));
         grpc_resolved_address addr{};
+        ServerAddressList addressList;
         for (const auto& instance : instances) {
             auto uri = URI::Create("ipv4", {},
                                  instance.ip + ":" + nacos::NacosStringOps::valueOf(instance.port),
                                  {}, {});
             if (uri.ok() and grpc_parse_uri(uri.value(), &addr)) {
-                result.addresses.value().emplace_back(addr, nullptr);
+              addressList.emplace_back(addr, nullptr);
             }
         }
+        result.addresses = addressList;
         result_handler_->ReportResult(result);
     }
     catch (nacos::NacosException &e) {

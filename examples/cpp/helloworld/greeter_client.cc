@@ -26,7 +26,6 @@
 #include "examples/protos/helloworld.grpc.pb.h"
 #else
 #include "helloworld.grpc.pb.h"
-#include "nacos/Nacos.h"
 #endif
 
 using grpc::Channel;
