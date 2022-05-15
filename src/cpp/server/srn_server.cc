@@ -76,6 +76,7 @@ bool SrnServer::RegisterService(const std::string *addr, grpc::Service *service)
             auto &instance = service_instances_[serviceName];
             instance.serviceName = serviceName;
             instance.groupName = "DEFAULT_GROUP";
+            instance.metadata = metaData;
         }
     }
     return Server::RegisterService(addr, service);
