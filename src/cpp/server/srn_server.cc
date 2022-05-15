@@ -33,6 +33,8 @@
 
 #include "Nacos.h"
 
+#include <iostream>
+
 namespace grpc {
 
 SrnServer::~SrnServer() {
@@ -40,7 +42,7 @@ SrnServer::~SrnServer() {
         try {
             auto iter = service_instances_.begin();
             while (iter != service_instances_.end()) {
-                naming_server_->deregisterInstance(iter->second.serviceName,
+              naming_server_->deregisterInstance(iter->second.serviceName,
                                                    iter->second.groupName,
                                                    iter->second);
                 iter++;
@@ -58,19 +60,22 @@ void SrnServer::Wait() {
 
 bool SrnServer::RegisterService(const std::string *addr, grpc::Service *service) {
     const char *method_name = nullptr;
-    nacos::Instance instance;
+    std::string serviceName;
+    std::map <NacosString, NacosString> metaData;
     for (const auto &method: *service->methods()) {
         method_name = method->name();
-        instance.metadata.insert({method_name, GetRpcMethodType(method)});
+        metaData.insert({method_name, GetRpcMethodType(method)});
     }
     if (method_name != nullptr) {
         std::stringstream ss(method_name);
-        if (std::getline(ss, instance.serviceName, '/') &&
-            std::getline(ss, instance.serviceName, '/')) {
+        if (std::getline(ss, serviceName, '/') &&
+            std::getline(ss, serviceName, '/')) {
         }
-        if (std::string::npos == instance.serviceName.find("grpc") &&
-            std::string::npos == instance.serviceName.find("v1")) {
-            service_instances_[instance.serviceName] = instance;
+        if (std::string::npos == serviceName.find("grpc") &&
+            std::string::npos == serviceName.find("v1")) {
+            auto &instance = service_instances_[serviceName];
+            instance.serviceName = serviceName;
+            instance.groupName = "DEFAULT_GROUP";
         }
     }
     return Server::RegisterService(addr, service);
