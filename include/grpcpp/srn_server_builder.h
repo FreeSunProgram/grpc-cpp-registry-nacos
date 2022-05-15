@@ -12,7 +12,7 @@ namespace grpc {
 // Server registry nacos add by sx
 class SrnServerBuilder : public ServerBuilder {
 public:
-    SrnServerBuilder(std::string name_server_addr);
+    SrnServerBuilder(std::string name_server_addr = "");
     ~SrnServerBuilder() override;
 
     /// Enlists an endpoint \a addr (port with an optional IP address) to

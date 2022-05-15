@@ -57,7 +57,9 @@ SrnServerBuilder::~SrnServerBuilder() = default;
 std::unique_ptr<grpc::Server> SrnServerBuilder::BuildAndStart() {
     auto server = ServerBuilder::BuildAndStart();
     auto srn_server = (SrnServer*)server.get();
-    srn_server->RegisterServiceToNacos(name_server_addr_, server_addr_);
+    if (!name_server_addr_.empty()) {
+        srn_server->RegisterServiceToNacos(name_server_addr_, server_addr_);
+    }
     return server;
 }
 
